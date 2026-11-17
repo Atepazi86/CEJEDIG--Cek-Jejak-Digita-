@@ -1,54 +1,67 @@
 import React from 'react';
+import { motion } from 'motion/react';
+
+export type AppView = 'audit' | 'analysis' | 'toolkit';
 
 interface TopBarProps {
+  activeView: AppView;
+  onSelectView: (view: AppView) => void;
   onRunAnalysis: () => void;
-  hasAnyInput: boolean;
   isAnalyzing: boolean;
+  hasAnalysis: boolean;
 }
 
+const NAV_ITEMS: Array<{ id: AppView; label: string }> = [
+  { id: 'audit', label: 'Audit' },
+  { id: 'analysis', label: 'Skor AI' },
+  { id: 'toolkit', label: 'Toolkit' },
+];
+
 export const TopBar: React.FC<TopBarProps> = ({
+  activeView,
+  onSelectView,
   onRunAnalysis,
-  hasAnyInput,
   isAnalyzing,
+  hasAnalysis,
 }) => {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#050608]/85 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6">
-        <a
-          href="#top"
-          className="font-display text-lg font-bold tracking-tight text-white whitespace-nowrap shrink-0"
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#050608]/75 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6">
+        <button
+          type="button"
+          onClick={() => onSelectView('audit')}
+          className="font-display text-base font-bold tracking-tight whitespace-nowrap shrink-0 cursor-pointer"
         >
-          JejakGuard AI
-        </a>
+          <span className="text-white">Jejak</span>
+          <span className="text-gradient-animated">Guard AI</span>
+        </button>
 
         <nav
           aria-label="Navigasi utama"
-          className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400"
+          className="flex items-center gap-6 text-xs font-medium sm:text-sm"
         >
-          <a
-            href="#audit-mandiri"
-            className="hover:text-white transition-colors whitespace-nowrap shrink-0"
-          >
-            Audit
-          </a>
-          <a
-            href="#analisis-ai"
-            className="hover:text-white transition-colors whitespace-nowrap shrink-0"
-          >
-            Analisis AI
-          </a>
-          <a
-            href="#toolkit-privasi"
-            className="hover:text-white transition-colors whitespace-nowrap shrink-0"
-          >
-            Toolkit
-          </a>
-          <a
-            href="#panduan-etis"
-            className="hover:text-white transition-colors whitespace-nowrap shrink-0"
-          >
-            Privasi
-          </a>
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeView === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => onSelectView(item.id)}
+                className={`relative py-1 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                  isActive ? 'text-sky-300' : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <span>{item.label}</span>
+                {isActive && (
+                  <motion.span
+                    layoutId="navActiveUnderline"
+                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute inset-x-0 -bottom-[15px] h-[2px] bg-gradient-to-r from-sky-400 to-indigo-400"
+                  />
+                )}
+              </button>
+            );
+          })}
         </nav>
 
         <div className="shrink-0">
@@ -56,13 +69,13 @@ export const TopBar: React.FC<TopBarProps> = ({
             type="button"
             onClick={onRunAnalysis}
             disabled={isAnalyzing}
-            className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60 whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 px-4 py-2 text-xs font-semibold text-white transition-all duration-150 hover:from-sky-400 hover:to-indigo-400 hover:-translate-y-0.5 disabled:opacity-60 whitespace-nowrap shrink-0 cursor-pointer"
           >
             {isAnalyzing
               ? 'Menganalisis...'
-              : hasAnyInput
-                ? 'Analisis AI'
-                : 'Mulai Audit'}
+              : hasAnalysis
+                ? 'Perbarui Skor'
+                : 'Analisis AI'}
           </button>
         </div>
       </div>
