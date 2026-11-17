@@ -1,0 +1,6 @@
+{
+  "name": "JejakGuard AI",
+  "description": "Audit Jejak Digital & Eksposur Data Pribadi berbasis OSINT mandiri, pengecekan kebocoran email publik, dan analisis risiko Gemini AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
